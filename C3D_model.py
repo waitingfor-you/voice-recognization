@@ -4,7 +4,7 @@ import torch.nn as nn
 class C3D(nn.Module):
     def __init__(self, num_classes,prtrained=True):
         super(C3D, self).__init__()
-
+        self.pretrained = prtrained
         self.conv1 = nn.Conv3d(3, 64, kernel_size=(3, 3, 3), padding=(1, 1, 1)) # 第一个卷积层
         self.pool1 = nn.MaxPool3d(kernel_size=(1, 2, 2), stride=(1, 2, 2)) # 第一个池化层
 
@@ -53,7 +53,7 @@ class C3D(nn.Module):
         x = self.relu(self.conv5b(x))
         x = self.pool5(x)
 
-        x = x.view(-1, 8192) # 原来x是一个四维的，所以需要我们把他转换成一维的，结果为8192，1
+        x = x.reshape(-1, 8192)  # 原来x是一个四维的，所以需要我们把他转换成一维的，结果为8192，1
         x = self.relu(self.fc6(x))
         x = self.dropout(x)
         x = self.relu(self.fc7(x))
